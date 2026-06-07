@@ -25,6 +25,11 @@ jobs:
           bun-version: latest
 
       - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
+        with:
+          # Auto-enable Pages on first run instead of requiring a manual
+          # Settings → Pages click. Needs the pages:write permission we
+          # already grant at the workflow level.
+          enablement: true
 
       - name: Install dependencies
         run: bun install --frozen-lockfile
