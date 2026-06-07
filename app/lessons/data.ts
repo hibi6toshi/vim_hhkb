@@ -106,8 +106,7 @@ export const lessons: Lesson[] = [
   {
     id: "A-append-end",
     title: "08. A で行末に追記",
-    description:
-      "A で行末に挿入モードに入り「!」を追加して Esc してください。",
+    description: "A で行末に挿入モードに入り「!」を追加して Esc してください。",
     hint: "A → ! → Esc",
     initialText: ["hello world"],
     initialCursor: { row: 0, col: 0 },
@@ -225,13 +224,7 @@ export const lessons: Lesson[] = [
     description:
       "数値+ddで複数行を一度に削除できます。中央の不要な 3 行を削除してください。",
     hint: "j で 2 行目へ → 3dd",
-    initialText: [
-      "header",
-      "junk1",
-      "junk2",
-      "junk3",
-      "footer",
-    ],
+    initialText: ["header", "junk1", "junk2", "junk3", "footer"],
     initialCursor: { row: 0, col: 0 },
     targetText: ["header", "footer"],
     category: "advanced",
@@ -276,12 +269,7 @@ export const lessons: Lesson[] = [
     description:
       "dG はカーソル行から最終行までをすべて削除します。2 行目以降を削除してヘッダーだけ残してください。",
     hint: "j → dG",
-    initialText: [
-      "// header",
-      "old code 1",
-      "old code 2",
-      "old code 3",
-    ],
+    initialText: ["// header", "old code 1", "old code 2", "old code 3"],
     initialCursor: { row: 0, col: 0 },
     targetText: ["// header"],
     category: "advanced",
@@ -313,7 +301,7 @@ export const lessons: Lesson[] = [
   },
   {
     id: "df-delete-until-char",
-    title: '25. df) で対応括弧まで削除',
+    title: "25. df) で対応括弧まで削除",
     description:
       "df は「指定文字を含めて削除」。カーソル位置から括弧 ) までを df) で一気に削除し、「const x = ;」にしてください。",
     hint: "df)",

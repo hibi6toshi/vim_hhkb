@@ -82,11 +82,31 @@ const rows: Key[][] = [
     { label: "Fn", match: ["fn"], accent: "mod" },
   ],
   [
-    { label: "◇", w: 1.5, match: ["meta-l", "meta", "alt-l", "alt"], accent: "diamond" },
-    { label: "◇", w: 1.5, match: ["alt-l", "alt", "meta-l", "meta"], accent: "diamond" },
+    {
+      label: "◇",
+      w: 1.5,
+      match: ["meta-l", "meta", "alt-l", "alt"],
+      accent: "diamond",
+    },
+    {
+      label: "◇",
+      w: 1.5,
+      match: ["alt-l", "alt", "meta-l", "meta"],
+      accent: "diamond",
+    },
     { label: "", w: 6, match: [" ", "space"], accent: "space" },
-    { label: "◇", w: 1.5, match: ["alt-r", "alt", "meta-r", "meta"], accent: "diamond" },
-    { label: "◇", w: 1.5, match: ["meta-r", "meta", "alt-r", "alt"], accent: "diamond" },
+    {
+      label: "◇",
+      w: 1.5,
+      match: ["alt-r", "alt", "meta-r", "meta"],
+      accent: "diamond",
+    },
+    {
+      label: "◇",
+      w: 1.5,
+      match: ["meta-r", "meta", "alt-r", "alt"],
+      accent: "diamond",
+    },
   ],
 ];
 
@@ -135,15 +155,18 @@ export type HHKBKeyboardProps = {
   showFnLabels?: boolean;
 };
 
-export function HHKBKeyboard({ activeKeys, showFnLabels = true }: HHKBKeyboardProps) {
+export function HHKBKeyboard({
+  activeKeys,
+  showFnLabels = true,
+}: HHKBKeyboardProps) {
   const expanded = expandActiveKeys(activeKeys);
   // unit width in px
   const U = 36;
   return (
-    <div className="inline-block rounded-2xl bg-zinc-900 p-4 shadow-xl border border-zinc-700">
+    <div className="inline-block rounded-2xl border border-zinc-700 bg-zinc-900 p-4 shadow-xl">
       <div className="flex flex-col gap-1.5">
         {rows.map((row, ri) => (
-          <div key={ri} className="flex gap-1.5 justify-center">
+          <div key={ri} className="flex justify-center gap-1.5">
             {row.map((k, ki) => {
               const w = (k.w ?? 1) * U;
               const matched = isMatched(k, expanded);
@@ -153,18 +176,18 @@ export function HHKBKeyboard({ activeKeys, showFnLabels = true }: HHKBKeyboardPr
                   key={ki}
                   style={{ width: w, height: U }}
                   className={[
-                    "relative flex items-center justify-center rounded-md border text-[10px] font-mono select-none transition-all duration-100",
+                    "relative flex items-center justify-center rounded-md border font-mono text-[10px] transition-all duration-100 select-none",
                     matched
-                      ? "bg-amber-300 text-zinc-900 border-amber-200 shadow-[0_0_10px_rgba(251,191,36,0.7)] scale-95"
+                      ? "scale-95 border-amber-200 bg-amber-300 text-zinc-900 shadow-[0_0_10px_rgba(251,191,36,0.7)]"
                       : accent === "control"
-                        ? "bg-zinc-800 text-zinc-100 border-zinc-700"
+                        ? "border-zinc-700 bg-zinc-800 text-zinc-100"
                         : accent === "mod"
-                          ? "bg-zinc-800 text-zinc-200 border-zinc-700"
+                          ? "border-zinc-700 bg-zinc-800 text-zinc-200"
                           : accent === "diamond"
-                            ? "bg-zinc-700 text-zinc-300 border-zinc-600"
+                            ? "border-zinc-600 bg-zinc-700 text-zinc-300"
                             : accent === "space"
-                              ? "bg-zinc-100 text-zinc-900 border-zinc-300"
-                              : "bg-zinc-100 text-zinc-900 border-zinc-300",
+                              ? "border-zinc-300 bg-zinc-100 text-zinc-900"
+                              : "border-zinc-300 bg-zinc-100 text-zinc-900",
                   ].join(" ")}
                 >
                   {k.shiftLabel && (
@@ -175,14 +198,16 @@ export function HHKBKeyboard({ activeKeys, showFnLabels = true }: HHKBKeyboardPr
                   {showFnLabels && k.fnLabel && (
                     <span
                       className={[
-                        "absolute bottom-0.5 right-1 text-[8px]",
+                        "absolute right-1 bottom-0.5 text-[8px]",
                         matched ? "text-sky-700" : "text-sky-500",
                       ].join(" ")}
                     >
                       {k.fnLabel}
                     </span>
                   )}
-                  <span className={k.shiftLabel ? "absolute bottom-0.5 left-1" : ""}>
+                  <span
+                    className={k.shiftLabel ? "absolute bottom-0.5 left-1" : ""}
+                  >
                     {k.label}
                   </span>
                 </div>

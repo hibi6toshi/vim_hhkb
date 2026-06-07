@@ -232,11 +232,27 @@ function findPairRange(
 // === Step dispatch ===
 
 const CHANGE_STARTERS = new Set([
-  "i", "I", "a", "A", "o", "O",
-  "x", "X", "s", "S",
-  "c", "C", "d", "D",
-  "p", "P", "r", "J", "~",
-  ">", "<",
+  "i",
+  "I",
+  "a",
+  "A",
+  "o",
+  "O",
+  "x",
+  "X",
+  "s",
+  "S",
+  "c",
+  "C",
+  "d",
+  "D",
+  "p",
+  "P",
+  "r",
+  "J",
+  "~",
+  ">",
+  "<",
 ]);
 
 function isChangeStarter(state: VimState, key: string): boolean {
@@ -614,7 +630,8 @@ function handleNormal(state: VimState, key: string): VimState {
   if (state.pending === "@") {
     let reg: string | null = null;
     if (key === "@") reg = state.lastMacro;
-    else if (key.length === 1 && /^[a-zA-Z0-9]$/.test(key)) reg = key.toLowerCase();
+    else if (key.length === 1 && /^[a-zA-Z0-9]$/.test(key))
+      reg = key.toLowerCase();
     if (!reg) return clearMeta(state);
     const macro = state.macros[reg];
     if (!macro || macro.length === 0) return clearMeta(state);
@@ -659,7 +676,10 @@ function handleNormal(state: VimState, key: string): VimState {
         return ret(
           clampCursor({
             ...state,
-            cursor: { row: state.cursor.row, col: Math.max(0, line.length - 1) },
+            cursor: {
+              row: state.cursor.row,
+              col: Math.max(0, line.length - 1),
+            },
           }),
         );
       }
@@ -961,7 +981,12 @@ function handleNormal(state: VimState, key: string): VimState {
       const s = deleteToFileEnd(state);
       const lines = [...s.lines];
       lines.splice(s.cursor.row, 0, "");
-      return { ...s, lines, mode: "insert", cursor: { row: s.cursor.row, col: 0 } };
+      return {
+        ...s,
+        lines,
+        mode: "insert",
+        cursor: { row: s.cursor.row, col: 0 },
+      };
     }
     case "c$": {
       const line = state.lines[state.cursor.row] ?? "";
@@ -999,7 +1024,7 @@ function handleNormal(state: VimState, key: string): VimState {
     case "ce":
     case "ye": {
       const op = pending[0] as "d" | "c" | "y";
-      let line = state.lines[state.cursor.row] ?? "";
+      const line = state.lines[state.cursor.row] ?? "";
       let endCol = state.cursor.col;
       for (let i = 0; i < n; i++) endCol = wordEnd(line, endCol);
       return inlineRangeOp(state, op, state.cursor.col, endCol);
@@ -1102,7 +1127,11 @@ function handleNormal(state: VimState, key: string): VimState {
     return clearMeta(state);
   }
   // cgn / dgn / ygn — operate on next search match
-  if (state.pending === "cg" || state.pending === "dg" || state.pending === "yg") {
+  if (
+    state.pending === "cg" ||
+    state.pending === "dg" ||
+    state.pending === "yg"
+  ) {
     if (key === "n") {
       const op = state.pending[0] as "c" | "d" | "y";
       return operatorOnNextMatch(state, op);
@@ -1133,8 +1162,7 @@ function deleteLine(state: VimState, n: number): VimState {
 
 function yankLine(state: VimState, n: number): VimState {
   const end = Math.min(state.cursor.row + n, state.lines.length);
-  const text =
-    state.lines.slice(state.cursor.row, end).join("\n") + "\n";
+  const text = state.lines.slice(state.cursor.row, end).join("\n") + "\n";
   return clearMeta({ ...state, register: { text, linewise: true } });
 }
 
@@ -1166,8 +1194,8 @@ function deleteWordOp(state: VimState, n: number): VimState {
 }
 
 function yankWord(state: VimState, n: number): VimState {
-  let line = state.lines[state.cursor.row] ?? "";
-  let startCol = state.cursor.col;
+  const line = state.lines[state.cursor.row] ?? "";
+  const startCol = state.cursor.col;
   let i = startCol;
   for (let k = 0; k < n; k++) {
     const wasWord = WORD_RE.test(line[i] ?? "");
@@ -1464,10 +1492,8 @@ function toggleCase(state: VimState, n: number): VimState {
   for (let i = 0; i < n; i++) {
     if (col + i >= newLine.length) break;
     const c = newLine[col + i];
-    const flipped =
-      c === c.toUpperCase() ? c.toLowerCase() : c.toUpperCase();
-    newLine =
-      newLine.slice(0, col + i) + flipped + newLine.slice(col + i + 1);
+    const flipped = c === c.toUpperCase() ? c.toLowerCase() : c.toUpperCase();
+    newLine = newLine.slice(0, col + i) + flipped + newLine.slice(col + i + 1);
     last = col + i + 1;
   }
   const s = setLine(state, state.cursor.row, newLine);
@@ -1578,11 +1604,7 @@ function redoState(state: VimState, n: number): VimState {
 
 // === Case operators ===
 
-function caseOpLine(
-  state: VimState,
-  op: "U" | "u" | "~",
-  n: number,
-): VimState {
+function caseOpLine(state: VimState, op: "U" | "u" | "~", n: number): VimState {
   const lines = [...state.lines];
   for (let i = 0; i < n; i++) {
     const r = state.cursor.row + i;
@@ -1640,7 +1662,13 @@ function caseOpMotion(
   const after = line.slice(hi + 1);
   const newLine = before + applyCase(target, op) + after;
   return clearMeta(
-    clampCursor(setLine({ ...state, cursor: { row: state.cursor.row, col: lo } }, state.cursor.row, newLine)),
+    clampCursor(
+      setLine(
+        { ...state, cursor: { row: state.cursor.row, col: lo } },
+        state.cursor.row,
+        newLine,
+      ),
+    ),
   );
 }
 
@@ -1755,7 +1783,8 @@ function findMatch(
     }
   } else {
     for (let row = fromRow; row >= 0; row--) {
-      const endCol = row === fromRow ? fromCol - 1 : (lines[row]?.length ?? 0) - 1;
+      const endCol =
+        row === fromRow ? fromCol - 1 : (lines[row]?.length ?? 0) - 1;
       const idx = (lines[row] ?? "").lastIndexOf(pattern, endCol);
       if (idx >= 0) return { row, col: idx, end: idx + len - 1 };
     }
@@ -1778,7 +1807,13 @@ function jumpToSearch(
   const fromCol = skipCursor
     ? state.cursor.col + (backward ? -1 : 1)
     : state.cursor.col;
-  const m = findMatch(state.lines, pattern, state.cursor.row, fromCol, backward);
+  const m = findMatch(
+    state.lines,
+    pattern,
+    state.cursor.row,
+    fromCol,
+    backward,
+  );
   if (!m) return state;
   return clampCursor({ ...state, cursor: { row: m.row, col: m.col } });
 }
@@ -1790,7 +1825,9 @@ function jumpToNextSearch(
 ): VimState {
   if (!state.lastSearch) return state;
   let s = state;
-  const dir = reverseDir ? !state.lastSearch.backward : state.lastSearch.backward;
+  const dir = reverseDir
+    ? !state.lastSearch.backward
+    : state.lastSearch.backward;
   for (let i = 0; i < n; i++) {
     s = jumpToSearch(s, state.lastSearch.pattern, dir, true);
   }
@@ -1839,10 +1876,7 @@ function scrollFullPage(state: VimState, n: number, dir: 1 | -1): VimState {
   });
 }
 
-function operatorOnNextMatch(
-  state: VimState,
-  op: "c" | "d" | "y",
-): VimState {
+function operatorOnNextMatch(state: VimState, op: "c" | "d" | "y"): VimState {
   if (!state.lastSearch) return clearMeta(state);
   const { pattern } = state.lastSearch;
   const m = findMatch(

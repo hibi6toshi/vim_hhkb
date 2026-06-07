@@ -23,20 +23,21 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-zinc-950 text-zinc-100">
-      <div className="mx-auto max-w-5xl px-6 py-12 flex flex-col gap-10">
+      <div className="mx-auto flex max-w-5xl flex-col gap-10 px-6 py-12">
         <header className="flex flex-col items-center gap-3 text-center">
           <h1 className="text-4xl font-bold tracking-tight">
-            <span className="text-amber-400">Vim</span> × <span className="text-sky-300">HHKB</span> Trainer
+            <span className="text-amber-400">Vim</span> ×{" "}
+            <span className="text-sky-300">HHKB</span> Trainer
           </h1>
           <p className="max-w-2xl text-zinc-400">
-            実際のコーディングシナリオを Vim キーバインドで操作しながら、
-            HHKB の配列にも同時に慣れていく練習アプリです。
+            実際のコーディングシナリオを Vim キーバインドで操作しながら、 HHKB
+            の配列にも同時に慣れていく練習アプリです。
             下のキーボード図に押したキーがハイライト表示されます。
           </p>
         </header>
 
         <section className="flex flex-col items-center gap-2">
-          <p className="text-xs uppercase tracking-wider text-zinc-500">
+          <p className="text-xs tracking-wider text-zinc-500 uppercase">
             キーを押してみてください
           </p>
           <HHKBKeyboard activeKeys={activeKeys} />
@@ -63,7 +64,7 @@ export default function Home() {
                       {lesson.title}
                     </span>
                     <span
-                      className={`rounded border px-2 py-0.5 text-[10px] font-mono ${
+                      className={`rounded border px-2 py-0.5 font-mono text-[10px] ${
                         categoryColor[lesson.category] ?? ""
                       }`}
                     >
@@ -100,7 +101,7 @@ export default function Home() {
                       {lesson.title}
                     </span>
                     <span
-                      className={`rounded border px-2 py-0.5 text-[10px] font-mono ${
+                      className={`rounded border px-2 py-0.5 font-mono text-[10px] ${
                         categoryColor[lesson.category] ?? ""
                       }`}
                     >

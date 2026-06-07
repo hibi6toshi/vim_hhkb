@@ -1,7 +1,12 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { createInitialState, linesEqual, step, type VimState } from "../lib/vim";
+import {
+  createInitialState,
+  linesEqual,
+  step,
+  type VimState,
+} from "../lib/vim";
 
 export type VimEditorProps = {
   initialLines: string[];
@@ -26,29 +31,38 @@ export function VimEditor({
   const [keystrokes, setKeystrokes] = useState<string[]>([]);
   const [solved, setSolved] = useState(false);
 
-  useEffect(() => {
+  // Reset when the lesson's inputs change — adjust state during render
+  // rather than in an effect (React 19 guidance).
+  const [prevInputs, setPrevInputs] = useState({ initialLines, initialCursor });
+  if (
+    prevInputs.initialLines !== initialLines ||
+    prevInputs.initialCursor !== initialCursor
+  ) {
+    setPrevInputs({ initialLines, initialCursor });
     setState(createInitialState(initialLines, initialCursor));
     setKeystrokes([]);
     setSolved(false);
-  }, [initialLines, initialCursor]);
+  }
 
   useEffect(() => {
     onStateChange?.(state);
   }, [state, onStateChange]);
 
-  useEffect(() => {
-    if (solved) return;
-    if (state.mode !== "normal") return;
-    if (!linesEqual(state.lines, targetLines)) return;
-    if (
-      targetCursor &&
-      (state.cursor.row !== targetCursor.row ||
-        state.cursor.col !== targetCursor.col)
-    )
-      return;
+  // Derive whether the current state matches the target. Sticky: once solved
+  // we don't go back, even if the user keeps editing.
+  const isMatching =
+    state.mode === "normal" &&
+    linesEqual(state.lines, targetLines) &&
+    (!targetCursor ||
+      (state.cursor.row === targetCursor.row &&
+        state.cursor.col === targetCursor.col));
+  if (isMatching && !solved) {
     setSolved(true);
-    onSuccess?.();
-  }, [state, targetLines, targetCursor, solved, onSuccess]);
+  }
+
+  useEffect(() => {
+    if (solved) onSuccess?.();
+  }, [solved, onSuccess]);
 
   const handleKey = useCallback((e: KeyboardEvent) => {
     let logical: string;
@@ -78,7 +92,9 @@ export function VimEditor({
     }
 
     if (
-      ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", " "].includes(e.key) ||
+      ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", " "].includes(
+        e.key,
+      ) ||
       logical.length === 1 ||
       logical === "Escape" ||
       logical === "Enter" ||
@@ -160,7 +176,7 @@ export function VimEditor({
       }
       return (
         <div key={ri} className="font-mono whitespace-pre">
-          <span className="text-zinc-500 select-none pr-3">
+          <span className="pr-3 text-zinc-500 select-none">
             {String(ri + 1).padStart(2, " ")}
           </span>
           {cells}
@@ -171,24 +187,29 @@ export function VimEditor({
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="rounded-md border border-zinc-700 bg-zinc-950 p-4 text-zinc-100 min-h-[160px] relative">
+      <div className="relative min-h-[160px] rounded-md border border-zinc-700 bg-zinc-950 p-4 text-zinc-100">
         {state.viewportTop > 0 && (
           <div className="mb-1 text-center font-mono text-[10px] text-zinc-500">
-            ↑ {state.viewportTop} more line{state.viewportTop > 1 ? "s" : ""} above
+            ↑ {state.viewportTop} more line{state.viewportTop > 1 ? "s" : ""}{" "}
+            above
           </div>
         )}
         {renderedLines}
         {state.viewportTop + state.viewportHeight < state.lines.length && (
           <div className="mt-1 text-center font-mono text-[10px] text-zinc-500">
-            ↓ {state.lines.length - state.viewportTop - state.viewportHeight} more line
-            {state.lines.length - state.viewportTop - state.viewportHeight > 1 ? "s" : ""} below
+            ↓ {state.lines.length - state.viewportTop - state.viewportHeight}{" "}
+            more line
+            {state.lines.length - state.viewportTop - state.viewportHeight > 1
+              ? "s"
+              : ""}{" "}
+            below
           </div>
         )}
         {state.mode === "command" && (
           <div className="mt-2 font-mono text-amber-300">
             {state.commandPrefix}
             {state.commandBuffer}
-            <span className="inline-block w-2 bg-amber-300 animate-pulse">
+            <span className="inline-block w-2 animate-pulse bg-amber-300">
               {" "}
             </span>
           </div>
@@ -200,9 +221,7 @@ export function VimEditor({
             {state.mode.toUpperCase()}
           </span>
           {state.count && (
-            <span className="font-mono text-sky-400">
-              count: {state.count}
-            </span>
+            <span className="font-mono text-sky-400">count: {state.count}</span>
           )}
           {state.pending && (
             <span className="font-mono text-amber-400">
@@ -210,7 +229,7 @@ export function VimEditor({
             </span>
           )}
           {state.macroRegister && (
-            <span className="font-mono text-rose-400 animate-pulse">
+            <span className="animate-pulse font-mono text-rose-400">
               ● recording @{state.macroRegister}
             </span>
           )}
@@ -227,9 +246,7 @@ export function VimEditor({
           )}
         </div>
         <div className="flex items-center gap-3">
-          <span className="font-mono">
-            {keystrokes.slice(-15).join(" ")}
-          </span>
+          <span className="font-mono">{keystrokes.slice(-15).join(" ")}</span>
           <button
             onClick={reset}
             className="rounded border border-zinc-600 px-2 py-0.5 hover:bg-zinc-800"
