@@ -117,11 +117,7 @@ describe("editing operators", () => {
   });
 
   it("yy then p pastes the line below", () => {
-    const s = feed(init(["one", "two"], { row: 0, col: 0 }), [
-      "y",
-      "y",
-      "p",
-    ]);
+    const s = feed(init(["one", "two"], { row: 0, col: 0 }), ["y", "y", "p"]);
     expect(s.lines).toEqual(["one", "one", "two"]);
   });
 

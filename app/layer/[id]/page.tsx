@@ -18,7 +18,9 @@ export default function LayerLessonPage() {
     return (
       <main className="mx-auto max-w-5xl px-6 py-12 text-zinc-100">
         <p>レッスンが見つかりませんでした。</p>
-        <Link href="/" className="text-amber-400 underline">← トップへ</Link>
+        <Link href="/" className="text-amber-400 underline">
+          ← トップへ
+        </Link>
       </main>
     );
   }
@@ -29,7 +31,7 @@ export default function LayerLessonPage() {
 
   return (
     <main className="min-h-screen bg-zinc-950 text-zinc-100">
-      <div className="mx-auto max-w-5xl px-6 py-8 flex flex-col gap-6">
+      <div className="mx-auto flex max-w-5xl flex-col gap-6 px-6 py-8">
         <div className="flex items-center justify-between">
           <Link href="/" className="text-sm text-zinc-400 hover:text-zinc-200">
             ← トップ
@@ -55,7 +57,7 @@ export default function LayerLessonPage() {
         </div>
 
         <header className="flex flex-col gap-2">
-          <span className="text-xs uppercase tracking-wider text-sky-300">
+          <span className="text-xs tracking-wider text-sky-300 uppercase">
             HHKB layer · {lesson.category}
           </span>
           <h1 className="text-2xl font-bold">{lesson.title}</h1>
@@ -92,7 +94,7 @@ export default function LayerLessonPage() {
         </section>
 
         <section className="flex flex-col items-center gap-2 pt-4">
-          <h2 className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
+          <h2 className="text-xs font-semibold tracking-wider text-zinc-400 uppercase">
             HHKB (Fnレイヤーは青い小さなラベル)
           </h2>
           <HHKBKeyboard activeKeys={activeKeys} />

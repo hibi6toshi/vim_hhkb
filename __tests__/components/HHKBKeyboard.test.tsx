@@ -1,8 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import {
-  HHKBKeyboard,
-  expandActiveKeys,
-} from "@/app/components/HHKBKeyboard";
+import { HHKBKeyboard, expandActiveKeys } from "@/app/components/HHKBKeyboard";
 
 describe("HHKBKeyboard", () => {
   it("renders alphabet keys", () => {

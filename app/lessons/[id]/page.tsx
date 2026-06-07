@@ -18,7 +18,9 @@ export default function LessonPage() {
     return (
       <main className="mx-auto max-w-5xl px-6 py-12 text-zinc-100">
         <p>レッスンが見つかりませんでした。</p>
-        <Link href="/" className="text-amber-400 underline">← トップへ</Link>
+        <Link href="/" className="text-amber-400 underline">
+          ← トップへ
+        </Link>
       </main>
     );
   }
@@ -29,7 +31,7 @@ export default function LessonPage() {
 
   return (
     <main className="min-h-screen bg-zinc-950 text-zinc-100">
-      <div className="mx-auto max-w-5xl px-6 py-8 flex flex-col gap-6">
+      <div className="mx-auto flex max-w-5xl flex-col gap-6 px-6 py-8">
         <div className="flex items-center justify-between">
           <Link href="/" className="text-sm text-zinc-400 hover:text-zinc-200">
             ← レッスン一覧
@@ -55,7 +57,7 @@ export default function LessonPage() {
         </div>
 
         <header className="flex flex-col gap-2">
-          <span className="text-xs uppercase tracking-wider text-amber-400">
+          <span className="text-xs tracking-wider text-amber-400 uppercase">
             {lesson.category}
           </span>
           <h1 className="text-2xl font-bold">{lesson.title}</h1>
@@ -72,7 +74,7 @@ export default function LessonPage() {
 
         <section className="grid gap-4 md:grid-cols-2">
           <div>
-            <h2 className="mb-2 text-xs font-semibold uppercase tracking-wider text-zinc-400">
+            <h2 className="mb-2 text-xs font-semibold tracking-wider text-zinc-400 uppercase">
               エディタ
             </h2>
             <VimEditor
@@ -84,10 +86,10 @@ export default function LessonPage() {
             />
           </div>
           <div>
-            <h2 className="mb-2 text-xs font-semibold uppercase tracking-wider text-zinc-400">
+            <h2 className="mb-2 text-xs font-semibold tracking-wider text-zinc-400 uppercase">
               目標
             </h2>
-            <pre className="rounded-md border border-emerald-700/40 bg-emerald-900/10 p-4 font-mono text-sm text-emerald-200 whitespace-pre">
+            <pre className="rounded-md border border-emerald-700/40 bg-emerald-900/10 p-4 font-mono text-sm whitespace-pre text-emerald-200">
               {lesson.targetText.join("\n") || " "}
             </pre>
             {lesson.targetCursor && (
@@ -115,7 +117,7 @@ export default function LessonPage() {
         </section>
 
         <section className="flex flex-col items-center gap-2 pt-4">
-          <h2 className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
+          <h2 className="text-xs font-semibold tracking-wider text-zinc-400 uppercase">
             HHKB
           </h2>
           <HHKBKeyboard activeKeys={activeKeys} />

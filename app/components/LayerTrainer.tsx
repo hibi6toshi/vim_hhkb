@@ -9,18 +9,26 @@ export type LayerTrainerProps = {
   onSuccess?: () => void;
 };
 
-export function LayerTrainer({ sequence, display, onSuccess }: LayerTrainerProps) {
+export function LayerTrainer({
+  sequence,
+  display,
+  onSuccess,
+}: LayerTrainerProps) {
   const [progress, setProgress] = useState(0);
   const [mistakes, setMistakes] = useState(0);
   const [lastKey, setLastKey] = useState<string>("");
   const [cleared, setCleared] = useState(false);
 
-  useEffect(() => {
+  // Reset when the lesson's sequence changes — adjust state during render
+  // rather than in an effect (React 19 guidance).
+  const [prevSequence, setPrevSequence] = useState(sequence);
+  if (prevSequence !== sequence) {
+    setPrevSequence(sequence);
     setProgress(0);
     setMistakes(0);
     setLastKey("");
     setCleared(false);
-  }, [sequence]);
+  }
 
   const handleKey = useCallback(
     (e: KeyboardEvent) => {
@@ -87,7 +95,7 @@ export function LayerTrainer({ sequence, display, onSuccess }: LayerTrainerProps
                 state === "done"
                   ? "border-emerald-400 bg-emerald-500/20 text-emerald-300"
                   : state === "current"
-                    ? "border-amber-400 bg-amber-500/20 text-amber-200 animate-pulse"
+                    ? "animate-pulse border-amber-400 bg-amber-500/20 text-amber-200"
                     : "border-zinc-700 bg-zinc-900 text-zinc-500",
               ].join(" ")}
             >
@@ -102,13 +110,10 @@ export function LayerTrainer({ sequence, display, onSuccess }: LayerTrainerProps
           <span className="font-mono">
             {progress} / {sequence.length}
           </span>
-          <span className="font-mono text-rose-300">
-            ミス: {mistakes}
-          </span>
+          <span className="font-mono text-rose-300">ミス: {mistakes}</span>
           {lastKey && (
             <span className="font-mono">
-              last:{" "}
-              <span className="text-zinc-200">{lastKey}</span>
+              last: <span className="text-zinc-200">{lastKey}</span>
             </span>
           )}
           {cleared && (
